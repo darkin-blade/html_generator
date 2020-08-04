@@ -35,14 +35,15 @@ letter [A-Za-z]
   BEGIN(escape);
 }
 
-<escape>[\s\S] {
+<escape>("."|"\n") {
+  /* 需要转义的符号 */
   CYAN("%s", yytext);
   BEGIN(0);
 }
 
 "---" {
   /* 分割线 */
-  if (yytext_last == '\n') {
+  if (yytext_last == '\n' || yytext_last == -1) {
     CYAN("%s", yytext);
     // return HR;
   } else {
@@ -53,21 +54,30 @@ letter [A-Za-z]
 "```" {
   /* 行间代码开始 */
   BEGIN(code_block);
+  CYAN("begin code block");
 }
 
-<code_block>"\n```" {
+<code_block>"`" {
   /* 行间代码结束 */
-  BEGIN(0);
+  if (yytext_last == '\n') {
+    if (strcmp(yytext, "```") == 0) {
+      BEGIN(0);
+      CYAN("end code block");
+    } else {
+      yymore();
+    }
+  }
 }
 
-<code_block>[\s\S]* {
+<code_block>[^`]* {
   /* 行间代码 */
   CYAN("%s", yytext);
+  save_last(yytext);
 }
 
 "\n"{delim}*"\n" { 
   /* 空行 */
-  CYAN("%s", yytext);
+  CYAN("void line");
 }
 
 "__" {
@@ -87,11 +97,15 @@ letter [A-Za-z]
   BEGIN(code_inline_2);
 }
 
-<code_inline_2>"``" {
-  BEGIN(0);
+<code_inline_2>"`" {
+  if (strcmp(yytext, "``") == 0) {
+    BEGIN(0);
+  } else {
+    yymore();
+  }
 }
 
-<code_inline_2>[\s\S]* {
+<code_inline_2>[^`]* {
   CYAN("%s", yytext);
 }
 
@@ -110,12 +124,22 @@ letter [A-Za-z]
 "`" {
   /* 反引号 */
   BEGIN(code_inline_1);
+  CYAN("begin code 1");
+}
+
+<code_inline_1>"`" {
+  BEGIN(0);
+  CYAN("end code 1");
+}
+
+<code_inline_1>[^`]* {
+  CYAN("%s", yytext);
 }
 
 "#"+ { 
   /* 标题 */
-  if (yytext_last == '\n') {
-    CYAN("%s", yytext);
+  if (yytext_last == '\n' || yytext_last == -1) {
+    CYAN("title %d", strlen(yytext));
     // return TITLE;
   } else {
     yymore();
@@ -126,7 +150,7 @@ letter [A-Za-z]
   yytext_last = '\n';
 }
 
-[\s\S] {
+. {
   CYAN("%s", yytext);
 }
 

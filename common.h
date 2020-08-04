@@ -11,8 +11,7 @@
 #define GREEN(format, ...) \
   printf("\033[1;32m[%s,%d]" format "\33[0m\n", __FILE__, __LINE__, ## __VA_ARGS__)
 #define CYAN(format, ...) \
-  assert(1)
-  // printf("\033[1;36m[%s,%d]" format "\33[0m\n", __FILE__, __LINE__, ## __VA_ARGS__)
+  printf("\033[1;36m[%s,%d]" format "\33[0m\n", __FILE__, __LINE__, ## __VA_ARGS__)
 
 struct tmp_node {
   ;

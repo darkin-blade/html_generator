@@ -45,3 +45,25 @@ Paragraph
 /* 用户函数部分 */
 
 #include "lex.yy.c" /* 为了能够使用Flex中的各种函数 */
+
+yyerror(char *msg) {
+  RED("[%d, %s]", yylineno, yytext);
+}
+
+int main(int argc, char **argv) {
+  if (argc <= 1) {
+    return 1;
+  }
+
+
+  FILE *md_file = fopen(argv[1], "r");
+  if (!md_file) {
+    RED("can't open %s", argv[1]);
+    return 1;
+  }
+  yyrestart(md_file);
+  yyparse();
+  fclose(md_file);
+
+  return 0;
+}

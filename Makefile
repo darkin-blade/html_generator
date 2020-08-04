@@ -16,6 +16,7 @@ YFO = $(YFC:.c=.o)
 
 run: syntax $(filter-out $(LFO),$(OBJS))
 	$(CC) -o parser $(filter-out $(LFO),$(OBJS)) -lfl -ly
+	./parser test/1.md
 
 syntax: lexical syntax-c
 	$(CC) -c $(YFC) -o $(YFO)

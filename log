@@ -1,0 +1,33 @@
+flex -o ./lex.yy.c ./lexical.l
+bison -o ./syntax.tab.c -d -v ./syntax.y
+gcc -c ./syntax.tab.c -o ./syntax.tab.o
+gcc -o parser ./syntax.tab.o -lfl -ly
+./parser test/1.md
+[1;36m[./lexical.l,127]###[0m
+[1;36m[./lexical.l,139] [0m
+[1;36m[./lexical.l,139]t[0m
+[1;36m[./lexical.l,139]i[0m
+[1;36m[./lexical.l,139]t[0m
+[1;36m[./lexical.l,139]l[0m
+[1;36m[./lexical.l,139]e[0m
+[1;36m[./lexical.l,71]
+
+[0m
+[1;36m[./lexical.l,139]l[0m
+[1;36m[./lexical.l,139]i[0m
+[1;36m[./lexical.l,139]n[0m
+[1;36m[./lexical.l,139]e[0m
+[1;36m[./lexical.l,139] [0m
+inline code[1;36m[./lexical.l,139] [0m
+[1;36m[./lexical.l,139]l[0m
+[1;36m[./lexical.l,139]i[0m
+[1;36m[./lexical.l,139]n[0m
+[1;36m[./lexical.l,139]e[0m
+[1;36m[./lexical.l,71]
+
+[0m
+
+code block[1;36m[./lexical.l,71]
+
+[0m
+[1;31m[./syntax.y,50][8, ][0m
