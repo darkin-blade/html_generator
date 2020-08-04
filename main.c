@@ -7,7 +7,7 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-  FILE *md_file = fopen(argv[1]);
+  FILE *md_file = fopen(argv[1], "r");
   yyrestart(md_file);
   yyparse();
   fclose(md_file);
